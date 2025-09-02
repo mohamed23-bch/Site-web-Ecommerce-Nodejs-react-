@@ -1,22 +1,47 @@
 import axios from 'axios';
-import React from 'react'
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 function EditeRecipe() {
     const [recipe, setRecipe] = useState({
         title: '',
         ingredients: [],
-        instruction: ''
+        instruction: '',
+        coverImage: null
     });
 
-    // const get
+    const { id } = useParams();
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const getRecipe = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5000/recipe/${id}`);
+                const res = response.data;
+                setRecipe({
+                    title: res.title,
+                    ingredients: res.ingredients,
+                    instruction: res.instruction,
+                    coverImage: res.coverImage ? res.coverImage : null
+                });
+            } catch (error) {
+                console.error('Erreur lors de la récupération:', error);
+            }
+        }
+        
+        getRecipe();
+    }, [id]);
+
     const onHandleChange = (e) => {
-        let val = (e.target.name === "ingredients" 
-            ? e.target.value.split(",").map(ingredient => ingredient.trim())
-            :(e.target.name === "coverImage") ? e.target.files[0] : e.target.value);
+        let val;
+        
+        if (e.target.name === "ingredients") {
+            val = e.target.value.split(",").map(ingredient => ingredient.trim());
+        } else if (e.target.name === "coverImage") {
+            val = e.target.files[0];
+        } else {
+            val = e.target.value;
+        }
         
         setRecipe(prev => ({ ...prev, [e.target.name]: val }));
     }
@@ -25,12 +50,22 @@ function EditeRecipe() {
         e.preventDefault();
         
         try {
+            // Créer un FormData pour gérer le fichier
+            const formData = new FormData();
+            formData.append('title', recipe.title);
+            formData.append('ingredients', JSON.stringify(recipe.ingredients));
+            formData.append('instruction', recipe.instruction);
+            if (recipe.coverImage && recipe.coverImage instanceof File) {
+                formData.append('coverImage', recipe.coverImage);
+            }
+
             console.log('Données envoyées:', recipe);
             
-            await axios.post("http://localhost:5000/recipe/", recipe, {
+            // Utiliser PUT pour la modification au lieu de POST
+            await axios.put(`http://localhost:5000/recipe/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
-                    'Authorization':`Bearer ${localStorage.getItem("token")}`
+                    'Authorization': `Bearer ${localStorage.getItem("token")}`
                 }
             });
             
@@ -43,7 +78,7 @@ function EditeRecipe() {
     return (
         <>
             <form onSubmit={onHandleSubmit} className='input-form w-50 m-auto'>
-                <input 
+                <input
                     onChange={onHandleChange} 
                     name='title' 
                     type="text" 
@@ -58,7 +93,7 @@ function EditeRecipe() {
                     name='ingredients' 
                     className='form-control mt-3' 
                     placeholder='Ingrédients (séparés par des virgules)'
-                    value={recipe.ingredients.join(', ')}
+                    value={Array.isArray(recipe.ingredients) ? recipe.ingredients.join(', ') : ''}
                     required
                 />
                 <textarea 
@@ -70,20 +105,21 @@ function EditeRecipe() {
                     value={recipe.instruction}
                     required
                 />
-                 <input 
+                <input 
                     onChange={onHandleChange} 
                     name='coverImage' 
                     className='form-control mt-3' 
-                    placeholder='coverImage'
+                    placeholder='Cover Image'
                     type='file'
+                    accept='image/*'
                 />
 
                 <button className='button mt-5 w-100' type='submit'>
-                    Edite Recipe
+                    Edit Recipe
                 </button>
             </form>
         </>
     )
 }
 
-export default EditeRecipe
+export default EditeRecipe;

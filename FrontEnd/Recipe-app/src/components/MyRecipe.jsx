@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { HiHeart } from 'react-icons/hi';
 import { HiPencil } from 'react-icons/hi';
 import { AiFillDelete } from 'react-icons/ai';
+
 function MyRecipe() {
   const [Recipe, setRecipe] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -40,6 +41,12 @@ function MyRecipe() {
   if (loading) {
     return <div>Chargement...</div>;
   }
+  
+  const onDeleteRecipes = async(id)=>{
+    await axios.delete(`http://localhost:5000/recipe/${id}`)
+    .then((res)=> console.log(res))
+    setRecipe(prev => prev.filter(r => r._id !== id))
+  }
 
   return (
     <>
@@ -48,29 +55,31 @@ function MyRecipe() {
         {Recipe.length === 0 ? (
           <p>No Recipes Found.</p>
         ) : (
-          <div className='cards-wrapper'>
+          <div className='row'>
             {Recipe?.map((recipe, index) => (
-              <div className='recipes-card' key={recipe._id || index}>
-                <img 
-                  className='w-100' 
-                  src={`http://localhost:5000/public/images/${recipe.coverImage}`}
-                  alt={recipe.title}
-                />
-                <h4>{recipe?.title}</h4>
-                <p>
-                  {Array.isArray(recipe?.ingredients) 
-                    ? recipe.ingredients.join(', ') 
-                    : recipe?.ingredients
-                  }
-                </p>
-                <small>{recipe?.instruction}</small>
-                
-                  <HiHeart className='icons' />
-                  <div className='mt-2 icons-down'>
-                  <AiFillDelete className='iconse'/>
-                  <Link href={`/editrecipe/${recipe._id}`}><HiPencil className='iconse'/></Link>
-                  </div>
-                
+              <div className='col-lg-3 col-md-6 col-sm-12 mb-4' key={recipe._id || index}>
+                <div className='recipes-card'>
+                  <img 
+                    className='w-100' 
+                    src={`http://localhost:5000/public/images/${recipe.coverImage}`}
+                    alt={recipe.title}
+                  />
+                  <h4>{recipe?.title}</h4>
+                  <p>
+                    {Array.isArray(recipe?.ingredients) 
+                      ? recipe.ingredients.join(', ') 
+                      : recipe?.ingredients
+                    }
+                  </p>
+                  <small>{recipe?.instruction}</small>
+                  
+                    <HiHeart className='icons' />
+                    <div className='mt-2 icons-down'>
+                    <AiFillDelete onClick={()=> onDeleteRecipes(recipe._id)} className='iconse'/>
+                    <a href={`/editrecipe/${recipe._id}`}><HiPencil className='iconse'/></a>
+                    </div>
+                  
+                </div>
               </div>
             ))}
           </div>

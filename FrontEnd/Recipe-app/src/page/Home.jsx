@@ -1,58 +1,153 @@
-import React from 'react'
-import image_home from '../assets/image_home.png'
-import "../App.css";
+import React, { useState } from 'react';
 import AllRecipe from '../components/AllRecipe';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 import Model from '../components/Model';
 import InputForm from '../components/InputForm';
 import InputFormSignIn from '../components/InputFormSignIn';
-
+import { FaHeart, FaSearch, FaStar, FaUsers, FaUtensils, FaGlobe } from 'react-icons/fa';
+import '../App.css'
 function Home() {
   const [showSignUp, setShowSignUp] = useState(false);
-  const [isOpen , setopen] = useState(false);
+  const [isOpen, setopen] = useState(false);
+  const navigate = useNavigate();
+
   const toggleToSignUp = () => {
     setShowSignUp(true);
-  }
+  };
+
   const toggleToLogin = () => {
     setShowSignUp(false);
-  }
+  };
+
   const closeModel = () => {
     setopen(false);
-    setShowSignUp(false); // Reset quand on ferme
-  }
-  const addRecipes = ()=>{
+    setShowSignUp(false);
+  };
 
+  const addRecipes = () => {
     let token = localStorage.getItem("token");
-    if(token)
-    {
-      navigate("/addrecipe")
-    }else{
-      setopen(true)
+    if(token) {
+      navigate("/addrecipe");
+    } else {
+      setopen(true);
     }
+  };
 
-  }
-  const navigate = useNavigate()
   return (
-    <>
-    <section className='home'>
-    <div className='left'>
-        <h1>Share your Favorite Recipe    </h1>
-        <p>
-            lorem
-        </p>
-        <button onClick={addRecipes}>Share Your Recipe</button>
-    </div>
-     <div className='reght'>
-        <img src={image_home}  width="350px" height="350px"/>
-        
-    </div>
-    </section>
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
+      {/* Hero Section Moderne */}
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-100/50 to-amber-100/50"></div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+            {/* Contenu gauche */}
+            <div className="space-y-8 text-center lg:text-left">
+              <div className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-orange-400 to-orange-500 text-white rounded-full text-sm font-semibold">
+                🍽️ Partagez vos recettes préférées
+              </div>
+              
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-800 leading-tight">
+                Découvrez et Partagez{' '}
+                <span className="bg-gradient-to-r from-orange-400 to-orange-500 bg-clip-text text-transparent">
+                  des Recettes
+                </span>{' '}
+                Extraordinaires
+              </h1>
+              
+              <p className="text-lg text-gray-600 max-w-2xl">
+                Rejoignez notre communauté de passionnés de cuisine. Partagez vos créations culinaires, 
+                découvrez de nouvelles saveurs et inspirez-vous des recettes du monde entier.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <button 
+                  onClick={addRecipes}
+                  className="inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-orange-400 to-orange-500 text-white font-semibold rounded-full hover:from-orange-500 hover:to-orange-600 transform hover:-translate-y-1 transition-all shadow-lg hover:shadow-xl"
+                >
+                  📖 Partager ma Recette
+                </button>
+                <button className="inline-flex items-center justify-center px-8 py-4 bg-white text-orange-500 font-semibold rounded-full border-2 border-orange-500 hover:bg-orange-500 hover:text-white transform hover:-translate-y-1 transition-all">
+                  🔍 Découvrir les Recettes
+                </button>
+              </div>
+              
+              {/* Statistiques */}
+              <div className="grid grid-cols-3 gap-8 pt-8">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-orange-500">1000+</div>
+                  <div className="text-gray-600 font-medium">Recettes</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-orange-500">500+</div>
+                  <div className="text-gray-600 font-medium">Chefs</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-orange-500">50+</div>
+                  <div className="text-gray-600 font-medium">Pays</div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Image droite */}
+            <div className="relative">
+              <div className="relative z-10">
+                <img 
+                  src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600" 
+                  alt="Délicieux plat" 
+                  className="w-full max-w-lg mx-auto rounded-3xl shadow-2xl"
+                />
+                
+                {/* Cartes flottantes */}
+                <div className="absolute -top-4 -left-4 bg-white p-4 rounded-2xl shadow-lg animate-bounce">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl">🥗</span>
+                    <span className="font-semibold text-gray-700">Recettes Saines</span>
+                  </div>
+                </div>
+                
+                <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-2xl shadow-lg animate-bounce" style={{animationDelay: '1s'}}>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl">⭐</span>
+                    <span className="font-semibold text-gray-700">Top Rated</span>
+                  </div>
+                </div>
+                
+                <div className="absolute top-1/2 -right-8 bg-white p-4 rounded-2xl shadow-lg animate-bounce" style={{animationDelay: '2s'}}>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-2xl">👨‍🍳</span>
+                    <span className="font-semibold text-gray-700">Chefs Experts</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
-    <div className='bg'>
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#ff9560" fill-opacity="0.99" d="M0,224L21.8,229.3C43.6,235,87,245,131,213.3C174.5,181,218,107,262,74.7C305.5,43,349,53,393,90.7C436.4,128,480,192,524,202.7C567.3,213,611,171,655,144C698.2,117,742,107,785,128C829.1,149,873,203,916,224C960,245,1004,235,1047,202.7C1090.9,171,1135,117,1178,112C1221.8,107,1265,149,1309,138.7C1352.7,128,1396,64,1418,32L1440,0L1440,320L1418.2,320C1396.4,320,1353,320,1309,320C1265.5,320,1222,320,1178,320C1134.5,320,1091,320,1047,320C1003.6,320,960,320,916,320C872.7,320,829,320,785,320C741.8,320,698,320,655,320C610.9,320,567,320,524,320C480,320,436,320,393,320C349.1,320,305,320,262,320C218.2,320,175,320,131,320C87.3,320,44,320,22,320L0,320Z"></path></svg>
-    </div>
-    {isOpen && (
+      {/* Wave Separator */}
+      <div className="relative">
+        <svg className="w-full h-20" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0V120Z" fill="#ff9560"/>
+        </svg>
+      </div>
+
+      {/* Section des recettes avec fond moderne */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-800 mb-4">Toutes les Recettes</h2>
+            <p className="text-gray-600 max-w-2xl mx-auto">
+              Découvrez notre collection de recettes soigneusement sélectionnées par notre communauté de chefs passionnés
+            </p>
+          </div>
+          
+          {/* Votre composant AllRecipe existant */}
+          <AllRecipe />
+        </div>
+      </section>
+
+      {/* Modal avec votre logique existante */}
+      {isOpen && (
         <Model onClose={closeModel}>
           {!showSignUp ? (
             <InputForm onSignUpClick={toggleToSignUp} />
@@ -61,10 +156,8 @@ function Home() {
           )}
         </Model>
       )}
-
-    <AllRecipe />
-    </>
-  )
+    </div>
+  );
 }
 
-export default Home
+export default Home;
