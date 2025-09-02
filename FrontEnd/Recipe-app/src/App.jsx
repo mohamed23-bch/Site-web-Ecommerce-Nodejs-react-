@@ -5,6 +5,7 @@ import Navebar from './components/Navebar';
 import MyRecipe from './components/MyRecipe';
 import FavRecipe from './components/FavRecipe';
 import AddRecipe from './components/AddRecipe';
+import EditeRecipe from './page/EditeRecipe';
 
 export default function App() {
   return (
@@ -15,6 +16,7 @@ export default function App() {
         <Route path="/myrecipe" element={<MyRecipe />} />
         <Route path="/favrecipe" element={<FavRecipe />} />
         <Route path="/addrecipe" element={<AddRecipe />} />
+        <Route path="/editrecipe/:id" element={<EditeRecipe />} />
       </Routes>
     </BrowserRouter>
   );

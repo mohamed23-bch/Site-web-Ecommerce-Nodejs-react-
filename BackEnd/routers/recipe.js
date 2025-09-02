@@ -81,7 +81,8 @@ router.post('/', upload.single('coverImage'),verifyToken, async (req, res) => {
         const recipeData = {
             title,
             ingredients,
-            instruction
+            instruction,
+            createdBy: req.user._id 
         };
 
         // Ajouter l'image si elle existe

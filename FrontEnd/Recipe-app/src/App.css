@@ -32,6 +32,13 @@ button{
   border: none;
   outline: none;
 }
+.icons-down{
+  padding: 5px;
+}
+.icons-down .iconse{
+  color: #cc4806;
+  font-size: 24px;
+}
 header button{
   background-color: #ff9560;
   margin:0px;
